@@ -2,9 +2,16 @@
 ingressController:
   enabled: false
 
+# Kong Enterprise
 image:
   repository: kong/kong-gateway
   tag: "3.12.0.0"
+
+# If you want use Kong OSS
+# https://github.com/Kong/kong/releases
+# image:
+#   repository: kong/kong
+#   tag: "3.9.1"
 
 # Mount the secret created earlier
 secretVolumes:
