@@ -1,0 +1,89 @@
+# Do not use Kong Ingress Controller
+ingressController:
+  enabled: false
+
+image:
+  repository: kong/kong-gateway
+  tag: "3.12.0.0"
+
+# Mount the secret created earlier
+secretVolumes:
+  - kong-cluster-cert
+
+# Set Replica
+replicaCount: 3
+
+# For Kong Data Plane (DP)
+resources:
+  requests:
+    cpu: 500m
+    memory: 1536Mi # ~1.5Gi
+  limits:
+    cpu: 2000m
+    memory: 2048Mi # 2Gi
+
+autoscaling:
+  enabled: enable
+  minReplicas: 3
+  maxReplicas: 15
+  annotations: {}
+  behavior: {}
+  ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2 or autoscaling/v2beta
+  targetCPUUtilizationPercentage:
+  ## Otherwise for clusters that do support autoscaling/v2 or autoscaling/v2beta, use metrics
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+
+env:
+  # data_plane nodes do not have a database
+  role: data_plane
+  database: "off"
+
+  # Enable Logging
+  proxy_access_log: /dev/stdout
+  admin_access_log: /dev/stdout
+  admin_gui_access_log: /dev/stdout
+  portal_api_access_log: /dev/stdout
+  proxy_error_log: /dev/stderr
+  admin_error_log: /dev/stderr
+  admin_gui_error_log: /dev/stderr
+  portal_api_error_log: /dev/stderr
+
+  # Enable Log Level
+  log_level: info
+
+  # Set Timezone
+  TZ: Asia/Jakarta
+
+  # Tell the data plane how to connect to the control plane
+  cluster_control_plane: kong-cp-kong-cluster.kong.svc.cluster.local:8005
+  cluster_telemetry_endpoint: kong-cp-kong-clustertelemetry.kong.svc.cluster.local:8006
+
+  # Configure control plane / data plane authentication
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+
+# Enterprise functionality
+enterprise:
+  enabled: false
+  # license_secret: kong-enterprise-license
+
+# The data plane handles proxy traffic only
+proxy:
+  enabled: true
+  type: NodePort
+  externalTrafficPolicy: Local
+
+# Disable Kong Admin
+admin:
+  enabled: false
+
+# For kong dp dont use manager
+manager:
+  enabled: false
