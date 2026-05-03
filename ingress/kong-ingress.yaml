@@ -4,11 +4,10 @@ metadata:
   name: kong-ingress
   namespace: kong
   annotations:
-    # This tells Kubernetes to use Kong to handle this Ingress
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: public
 spec:
   rules:
-    - host: kong-proxy.local
+    - host: kong-proxy.gobleh.cloud
       http:
         paths:
           - path: /

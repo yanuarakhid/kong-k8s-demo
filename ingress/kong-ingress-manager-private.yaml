@@ -4,10 +4,10 @@ metadata:
   name: kong-manager-ingress
   namespace: kong
   annotations:
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: public
 spec:
   rules:
-    - host: kong-manager.local
+    - host: kong-manager.gobleh.cloud
       http:
         paths:
           - path: /

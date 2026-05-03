@@ -19,8 +19,8 @@ secretVolumes:
 
 env:
   # Kong Admin API & Manager URL
-  admin_gui_url: http://kong-manager.local
-  admin_gui_api_url: http://kong-admin.local
+  admin_gui_url: https://kong-manager.gobleh.cloud
+  admin_gui_api_url: https://kong-admin.gobleh.cloud
 
   # This is a control_plane node
   role: control_plane
