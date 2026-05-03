@@ -18,7 +18,7 @@ secretVolumes:
   - kong-cluster-cert
 
 # Set Replica
-replicaCount: 3
+replicaCount: 2
 
 # For Kong Data Plane (DP)
 resources:
@@ -31,13 +31,13 @@ resources:
 
 autoscaling:
   enabled: enable
-  minReplicas: 3
-  maxReplicas: 15
+  minReplicas: 2
+  maxReplicas: 5
   annotations: {}
   behavior: {}
   ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2 or autoscaling/v2beta
-  targetCPUUtilizationPercentage:
-  ## Otherwise for clusters that do support autoscaling/v2 or autoscaling/v2beta, use metrics
+  targetCPUUtilizationPercentage: ## Otherwise for clusters that do support autoscaling/v2 or autoscaling/v2beta, use metrics
+
   metrics:
     - type: Resource
       resource:
@@ -81,7 +81,7 @@ enterprise:
   enabled: false
   # license_secret: kong-enterprise-license
 
-# The data plane handles proxy traffic only
+  # The data plane handles proxy traffic only
 proxy:
   enabled: true
   type: NodePort
